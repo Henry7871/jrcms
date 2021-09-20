@@ -33,7 +33,7 @@ podTemplate(
         stage('Push Docker image') {
             withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASSWD')]) {
             container('docker') {
-                sh "docker login --username ${USER} --password ${PASSWD}"
+                sh "docker login --username ${USER} --password-stdin ${PASSWD}"
                 sh "docker push ${image}"
             }
             }
