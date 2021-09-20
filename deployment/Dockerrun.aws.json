@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "davisliu/jrcms:aaa",
+    "Name": "wakaka7/jrcms:aaa",
     "Update": "true"
   },
   "Ports": [

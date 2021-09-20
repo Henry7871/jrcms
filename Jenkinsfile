@@ -64,18 +64,24 @@ podTemplate(
 
 def smokeTest(environment) {     
     container('eb') {
-       
-    }
+        String  test_url = "http://jrcmshenry-${environment}.eba-grs4pgnh.us-east-2.elasticbeanstalk.com/"
+        int status = sh(script:"curl -sLI -w '${http_code}' $test_url -o /dev/null", returnStdout: true)
+        if (status != 200 &&  status != 201){
+            error(
+                "Return status code = $status when calling $test_url"
+            )
+        }
+   }
 }
 
 def deployToEB(environment) {
     checkout scm
-    withCredentials([usernamePassword(credentialsId: 'aws-eb-key', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+    withCredentials([usernamePassword(credentialsId: 'aws-eb-jenkins', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
             container('eb') {
                 withEnv(["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "AWS_REGION=us-east-1"]) {
                     dir("deployment") {
                     sh "sh generate-dockerrun.sh ${currentBuild.number}"
-                    sh "eb deploy jrcms-${environment} -l ${currentBuild.number}"
+                    sh "eb deploy jrcmshenry-${environment} -l ${currentBuild.number}"
                     }
                 }
             }
