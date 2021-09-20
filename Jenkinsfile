@@ -33,7 +33,7 @@ podTemplate(
         stage('Push Docker image') {
             withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASSWD')]) {
             container('docker') {
-                sh "docker login --username ${USER} --password-stdin ${PASSWD}"
+                sh "docker login --username ${USER} --password ${PASSWD}"
                 sh "docker push ${image}"
             }
             }
@@ -78,7 +78,7 @@ def deployToEB(environment) {
     checkout scm
     withCredentials([usernamePassword(credentialsId: 'aws-eb-jenkins', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
             container('eb') {
-                withEnv(["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "AWS_REGION=us-east-1"]) {
+                withEnv(["AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}", "AWS_REGION=us-east-2"]) {
                     dir("deployment") {
                     sh "sh generate-dockerrun.sh ${currentBuild.number}"
                     sh "eb deploy jrcmshenry-${environment} -l ${currentBuild.number}"
