@@ -35,6 +35,7 @@ podTemplate(
             // username = docker_username password=%SECRET_VALUE%
             withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASSWD')]) {
             container('docker') {
+                sh "docker build -t ${image}"
                 sh "docker login --username ${USER} --password ${PASSWD}"
                 sh "docker push ${image}"
             }
