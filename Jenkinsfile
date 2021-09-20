@@ -31,6 +31,8 @@ podTemplate(
     
     if (env.BRANCH_NAME == 'master') {
         stage('Push Docker image') {
+            // docker_username = credentials('docker-hub')
+            // username = docker_username password=%SECRET_VALUE%
             withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASSWD')]) {
             container('docker') {
                 sh "docker login --username ${USER} --password ${PASSWD}"
