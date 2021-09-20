@@ -36,7 +36,7 @@ podTemplate(
             withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASSWD')]) {
             checkout scm
             container('docker') {
-                sh "docker build -t ${image} ."
+                sh "#!/bin/sh"
                 sh "docker login --username ${USER} --password ${PASSWD}"
                 sh "docker push ${image}"
             }
